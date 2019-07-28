@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  # Comment DNS service if online nip.io can be used
+  dns:
+    image: deskoh/pdns
+    container_name: "powerdns"
+    ports:
+      - "53:53"
+    environment:
+      # Customize upstream DNS server
+      - PDNS_recursor=8.8.8.8
+  nginx:
+    image: nginx:1.14.2-alpine
+    ports:
+      - "8080:80"
+    networks:
+      - dev-network
+    container_name: "nginx"
+    volumes:
+      - "./config/nginx:/etc/nginx/conf.d"
+    # depends_on:
+    #   - app
+
+networks:
+  dev-network:
+    driver: bridge
